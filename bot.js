@@ -1,4 +1,4 @@
-/// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 const { ActivityHandler, ActionTypes, ActivityTypes, CardFactory } = require('botbuilder');
@@ -173,12 +173,15 @@ class AttachmentsBot extends ActivityHandler {
     getInlineAttachment(str) 
         {
             const reply = { type: ActivityTypes.Message };
-     
+            
        
 //              const imageData = fs.readFileSync(path.join(__dirname, '/resources/a.png'));
 //         const base64Image = Buffer.from(imageData).toString('base64');
          
-        const imageData = fs.readFileSync(path.join(__dirname, '/img/1.png'));
+//         const imageData = fs.readFileSync(path.join(__dirname, '/resources/finalex.png'));
+//             var x='a';
+            var x=str;
+                    const imageData = fs.readFileSync(path.join(__dirname, '/resources/'+x+'.png'));
             
         const base64Image = Buffer.from(imageData).toString('base64');
            
