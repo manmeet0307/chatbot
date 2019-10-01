@@ -12,7 +12,10 @@ class EchoBot extends ActivityHandler {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-                await this.handleOutgoingAttachment(context);
+                    
+                   await this.handleOutgoingAttachment(context);
+                        await next();
+
 
             // By calling next() you ensure that the next BotHandler is run.
         });
@@ -33,15 +36,16 @@ class EchoBot extends ActivityHandler {
 
 
     async handleOutgoingAttachment(turnContext) {
+        
         const reply = { type: ActivityTypes.Message };
-        reply.text = 'This is an inline attachment.';
-        reply.attachments = [this.getInlineAttachment()];
+        reply.text = turnContext;
+        reply.attachments = [this.getInlineAttachment(turnContext)];
 
 
         await turnContext.sendActivity(reply);
     }
 
-    getInlineAttachment() {
+    getInlineAttachment(turnContext) {
     const imageData = fs.readFileSync(path.join(__dirname, 'img/1.png'));
     const base64Image = Buffer.from(imageData).toString('base64');
 
