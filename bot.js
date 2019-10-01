@@ -1,17 +1,20 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-const { ActivityHandler } = require('botbuilder');
+
+const { ActivityHandler, ActionTypes, ActivityTypes, CardFactory } = require('botbuilder');
+const path = require('path');
+const axios = require('axios');
+const fs = require('fs');
 
 class EchoBot extends ActivityHandler {
     constructor() {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            await context.sendActivity(`You said '${ context.activity.text.reverse().join('') }'`);
+                await this.handleOutgoingAttachment(context);
 
             // By calling next() you ensure that the next BotHandler is run.
-            await next();
         });
 
         this.onMembersAdded(async (context, next) => {
@@ -24,7 +27,30 @@ class EchoBot extends ActivityHandler {
             // By calling next() you ensure that the next BotHandler is run.
             await next();
         });
+
+
     }
+
+
+    async handleOutgoingAttachment(turnContext) {
+        const reply = { type: ActivityTypes.Message };
+        reply.text = 'This is an inline attachment.';
+        reply.attachments = [this.getInlineAttachment()];
+
+
+        await turnContext.sendActivity(reply);
+    }
+
+    getInlineAttachment() {
+    const imageData = fs.readFileSync(path.join(__dirname, 'img/1.png'));
+    const base64Image = Buffer.from(imageData).toString('base64');
+
+    return {
+        name: '1.png',
+        contentType: 'image/png',
+        contentUrl: `data:image/png;base64,${ base64Image }`
+    };
+}
 }
 
 module.exports.EchoBot = EchoBot;
